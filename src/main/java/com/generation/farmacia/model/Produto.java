@@ -1,28 +1,27 @@
 package com.generation.farmacia.model;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.CascadeType;
+
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "tb_categorias")
-public class Categoria {
+@Table(name = "tb_produtos")
+public class Produto {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotBlank(message = "O nome da categoria é obrigatório!")
+	@NotBlank(message = "O nome do produto é obrigatório!")
 	@Size(min = 4, max = 100, message = "O nome da categoria deve conter no mínimo 4 e no máximo 100 caracteres!")
 	private String nome;
 
@@ -30,9 +29,16 @@ public class Categoria {
 	@Size(min = 10, max = 500, message = "A descrição deve conter no mínimo 10 caracteres e no máximo 500 caracteres")
 	private String descricao;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "categoria", cascade = CascadeType.REMOVE)
-	@JsonIgnoreProperties("categoria")
-	private List<Produto> produto;
+	@NotNull(message = "O preço do produto é obrigatório!")
+	private float preco;
+
+	@NotNull(message = "Informar a quantidade dos produtos em estoque é obrigatório!")
+	private int estoque;
+
+	@ManyToOne
+	@JoinColumn(name = "categoria_id")
+	@JsonIgnoreProperties("produto")
+	private Categoria categoria;
 
 	public Long getId() {
 		return id;
@@ -58,12 +64,28 @@ public class Categoria {
 		this.descricao = descricao;
 	}
 
-	public List<Produto> getProduto() {
-		return produto;
+	public float getPreco() {
+		return preco;
 	}
 
-	public void setProduto(List<Produto> produto) {
-		this.produto = produto;
+	public void setPreco(float preco) {
+		this.preco = preco;
+	}
+
+	public int getEstoque() {
+		return estoque;
+	}
+
+	public void setEstoque(int estoque) {
+		this.estoque = estoque;
+	}
+
+	public Categoria getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
 	}
 
 }
