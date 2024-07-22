@@ -58,7 +58,7 @@ public class CategoriaControllerTest {
 		categoriaRepository.save(new Categoria(0L, "Alimentos", "Produtos alimentícios e bebidas"));
 		
 		ResponseEntity<Categoria[]> corpoResposta = testRestTemplate
-				.exchange("/categorias/nome/Dermo", HttpMethod.GET, null, Categoria[].class);
+				.exchange("/categorias/nome/alimentos", HttpMethod.GET, null, Categoria[].class);
 		
 		assertEquals(HttpStatus.OK, corpoResposta.getStatusCode());
 	}
@@ -76,6 +76,17 @@ public class CategoriaControllerTest {
 		ResponseEntity<String> resposta = testRestTemplate.exchange("/categorias", HttpMethod.GET, null, String.class);
 
 		assertEquals(HttpStatus.OK, resposta.getStatusCode());
+	}
+	
+	@Test
+	@DisplayName("Deletar uma categoria")
+	public void deveDeletarUmaCategoria() {
+
+		Categoria categoria = categoriaRepository.save(new Categoria(0L, "Fitness", "Equipamentos e acessórios para atividades físicas e exercícios"));
+		
+		ResponseEntity<Categoria> resposta = testRestTemplate.exchange("/categorias/" + categoria.getId(), HttpMethod.DELETE, null, Categoria.class);
+
+		assertEquals(HttpStatus.NO_CONTENT, resposta.getStatusCode());
 	}
 
 }
